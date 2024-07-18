@@ -71,7 +71,7 @@
               Registrar
             </button>
 
-            <RouterLink to="/" class="text-sm font-semibold text-sky-500 text-center"
+            <RouterLink to="/login" class="text-sm font-semibold text-sky-500 text-center"
               >Já possui uma conta? Entrar</RouterLink
             >
           </form>
