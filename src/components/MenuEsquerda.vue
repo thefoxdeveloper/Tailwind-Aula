@@ -36,7 +36,6 @@
       </div>
     </div>
 
-    <!-- Modal for tweeting -->
     <div
       v-if="showModal"
       class="fixed bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 h-screen w-screen"

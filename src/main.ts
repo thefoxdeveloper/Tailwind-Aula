@@ -6,9 +6,7 @@ import router from './router'
 import Toast, { type PluginOptions } from 'vue-toastification'
 
 const app = createApp(App)
-const options: PluginOptions = {
-  // You can set your default options here
-}
+const options: PluginOptions = {}
 app.use(router)
 
 app.mount('#app')

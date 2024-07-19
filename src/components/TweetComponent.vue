@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { Heart, MailCheck, MessageCircle } from 'lucide-vue-next'
+import { Heart, MessageCircle } from 'lucide-vue-next'
 import type { Tweet } from '@/types/types'
 import avatar from '../assets/avatarDef.jpg'
 import { tempoPassado } from '@/utils/utils'
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps<Tweet>()
 const liked = ref(false)
