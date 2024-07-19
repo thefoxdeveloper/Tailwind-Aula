@@ -74,6 +74,7 @@ const handleSubmit = async () => {
   }
 
   try {
+    isLoading.value = true
     const response = await axios.post('http://127.0.0.1:8000/api/login', form.value)
 
     if (response.status === 200) {

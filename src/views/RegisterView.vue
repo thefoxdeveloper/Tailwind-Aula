@@ -92,6 +92,18 @@
       </div>
     </div>
   </div>
+  <div
+    class="h-screen w-screen bg-black/60 fixed top-0 flex flex-row justify-center items-center"
+    v-if="isLoading"
+  >
+    <div
+      class="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 md:w-48 md:h-48 h-32 w-32 aspect-square rounded-full"
+    >
+      <div
+        class="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900 background-blur-md"
+      ></div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -134,6 +146,7 @@ const handleSubmit = async () => {
   }
 
   try {
+    isLoading.value = true
     const response = await axios.post('http://127.0.0.1:8000/api/users', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -141,6 +154,7 @@ const handleSubmit = async () => {
     })
 
     if (response.status === 201) {
+      window.location.href = '/login'
       showSuccessMessage.value = true
       toast.success('Usuário registrado com sucesso.', {
         timeout: 2000

@@ -24,4 +24,7 @@ type User = {
   name: string
   surname: string
   username: string
+  posts: Tweet[]
 }
+
+export type { Tweet, Coments, Likes, User }

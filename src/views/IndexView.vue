@@ -1,44 +1,49 @@
 <template>
-  <div class="bg-[#f2f2f2] h-screen w-screen flex flex-row justify-center items-center">
-    <div class="h-screen bg-white w-1/5"></div>
-    <div class="w-[1px] h-screen bg-black/15" />
-    <div class="h-screen bg-white w-3/5">
-      <div class="flex p-6 text-3xl font-bold border-b-2">Página inicial</div>
-      <div class="flex flex-col">
-        <!-- <TweetComponent
-          v-for="item in tweets"
-          v-bind:key="item.id"
-          :id="item.id"
-          :content="item.content"
-          :userId="item.userId"
-          :created_at="item.created_at"
-        /> -->
+  <MenuDireita />
+  <MenuEsquerda :currentUser="currentUser" :refreshTweets="refreshTweets" />
 
-        <pre>{{ tweets }}</pre>
+  <div class="flex flex-row justify-center">
+    <div class="w-3/5 flex flex-col border-black/5 border-[1px]">
+      <div class="p-6 text-3xl font-bold border-b-[1px] border-black/5">Página inicial</div>
+      <div class="h-full" v-if="!isLoading">
+        <TweetComponent v-for="tweet in tweets" v-bind:key="tweet.id" v-bind="tweet" />
       </div>
-    </div>
-    <div class="w-[1px] h-screen bg-black/15" />
-    <div class="h-screen bg-white w-1/5 flex flex-row justify-center" id="oqueEstaAcontecendo">
-      <div class="w-11/12 h-fit rounded-lg bg-gray-200 mt-10 p-4 flex flex-col gap-4">
-        <span class="text-2xl font-bold">O que está acontecendo?</span>
-        <HappeningTopic />
+      <div v-else class="flex justify-center items-center min-h-96">
+        <div
+          class="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 md:w-48 md:h-48 h-32 w-32 aspect-square rounded-full"
+        >
+          <div
+            class="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900 background-blur-md"
+          ></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import HappeningTopic from '@/components/HappeningTopic.vue'
 import TweetComponent from '@/components/TweetComponent.vue'
+import type { Tweet, User } from '@/types/types'
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
+import MenuEsquerda from '@/components/MenuEsquerda.vue'
+import MenuDireita from '@/components/MenuDireita.vue'
 
-const currentUser = ref<User[]>([])
-
+const currentUser = ref<User>({
+  id: 0,
+  name: '',
+  username: '',
+  email: '',
+  avatar_url: '',
+  created_at: '',
+  surname: '',
+  posts: []
+})
 const tweets = ref<Tweet[]>([])
-const users = ref<User[]>([])
+const isLoading = ref(false)
 
 const buscarTweets = async () => {
+  isLoading.value = true
   return axios
     .get('http://127.0.0.1:8000/api/posts', {
       headers: {
@@ -47,6 +52,9 @@ const buscarTweets = async () => {
     })
     .then(({ data: response }) => {
       return response.data
+    })
+    .finally(() => {
+      isLoading.value = false
     })
 }
 
@@ -62,27 +70,10 @@ const buscarUsuarioLogado = async () => {
     })
 }
 
-const buscarLikes = async () => {
-  return axios
-    .get(`http://127.0.0.1:8000/api/likes/`, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`
-      }
-    })
-    .then(({ data: response }) => {
-      return response.data
-    })
-}
-
-const allRequests = async () => {
-  const [likesResponse, tweetResponse, currentUserResponse] = await Promise.all([
-    buscarLikes(),
-    buscarTweets(),
-    buscarUsuarioLogado()
-  ])
-
-  tweets.value = tweetResponse
-  currentUser.value = currentUserResponse
+const refreshTweets = () => {
+  buscarTweets().then((response) => {
+    tweets.value = response
+  })
 }
 
 onMounted(() => {
@@ -91,14 +82,14 @@ onMounted(() => {
   if (!token) {
     window.location.href = '/login'
   }
+  buscarUsuarioLogado().then((response) => {
+    sessionStorage.setItem('userId', response.id)
 
-  // allRequests()
-  buscarTweets().then((response) => {
-    tweets.value = response
+    currentUser.value = response
   })
 
-  buscarUsuarioLogado().then((response) => {
-    currentUser.value = response
+  buscarTweets().then((response) => {
+    tweets.value = response
   })
 })
 </script>
