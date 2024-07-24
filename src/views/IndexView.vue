@@ -82,14 +82,16 @@ onMounted(() => {
   if (!token) {
     window.location.href = '/login'
   }
-  buscarUsuarioLogado().then((response) => {
-    sessionStorage.setItem('userId', response.id)
+  Promise.all([
+    buscarUsuarioLogado().then((response) => {
+      sessionStorage.setItem('userId', response.id)
 
-    currentUser.value = response
-  })
+      currentUser.value = response
+    }),
 
-  buscarTweets().then((response) => {
-    tweets.value = response
-  })
+    buscarTweets().then((response) => {
+      tweets.value = response
+    })
+  ])
 })
 </script>

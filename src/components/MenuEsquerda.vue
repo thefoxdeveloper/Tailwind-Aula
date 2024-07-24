@@ -6,15 +6,21 @@
       </div>
 
       <div class="flex flex-col mt-4">
-        <span class="text-xl font-semibold flex flex-row items-center gap-2">
-          <House class="w-6 h-6" /> Página inicial
-        </span>
-        <span class="text-xl font-semibold flex flex-row items-center gap-2">
-          <Hash class="w-6 h-6" /> Explorar
-        </span>
-        <span class="text-xl font-semibold flex flex-row items-center gap-2">
-          <UserIcon class="w-6 h-6" /> Perfil
-        </span>
+        <RouterLink to="/">
+          <span class="text-xl font-semibold flex flex-row items-center gap-2">
+            <House class="w-6 h-6" /> Página inicial
+          </span>
+        </RouterLink>
+        <RouterLink to="/explorer">
+          <span class="text-xl font-semibold flex flex-row items-center gap-2">
+            <Hash class="w-6 h-6" /> Explorar
+          </span>
+        </RouterLink>
+        <RouterLink :to="`/profile/${currentUser.id}`">
+          <span class="text-xl font-semibold flex flex-row items-center gap-2">
+            <UserIcon class="w-6 h-6" /> Perfil
+          </span>
+        </RouterLink>
       </div>
       <button
         @click="showModal = true"
@@ -25,7 +31,11 @@
     </div>
     <div class="p-10 flex flex-col">
       <div class="flex flex-row gap-2">
-        <img :src="currentUser.avatar_url" alt="" class="w-[60px] h-[60px] rounded-full" />
+        <img
+          :src="currentUser.avatar_url ? currentUser.avatar_url : avatar"
+          alt=""
+          class="w-[60px] h-[60px] rounded-full"
+        />
 
         <div class="flex flex-col">
           <span class="font-bold">{{ currentUser.name + ' ' + currentUser.surname }}</span>
@@ -38,7 +48,7 @@
 
     <div
       v-if="showModal"
-      class="fixed bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 h-screen w-screen"
+      class="fixed bg-gray-500 bg-opacity-75 flex items-center justify-center z-10 h-screen w-screen"
     >
       <div class="bg-white p-6 rounded-lg w-1/3">
         <div class="flex justify-between items-center">
@@ -69,7 +79,8 @@ import logo from '../assets/logo_growtweet.svg'
 import { Hash, House, User as UserIcon } from 'lucide-vue-next'
 import axios from 'axios'
 import type { User } from '@/types/types'
-
+import { RouterLink } from 'vue-router'
+import avatar from '../assets/avatarDef.jpg'
 const props = defineProps<{ currentUser: User; refreshTweets: () => void }>()
 const showModal = ref(false)
 const tweetContent = ref('')

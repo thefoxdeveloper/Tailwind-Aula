@@ -2,18 +2,22 @@
   <div class="flex flex-col w-full border-b-[1px]">
     <div class="flex flex-row items-start">
       <div class="p-3 flex flex-row justify-center items-center">
-        <img
-          :src="props.user.avatar_url ? props.user.avatar_url : avatar"
-          class="rounded-full"
-          alt=""
-          srcset=""
-          style="height: 80px; width: 80px"
-        />
+        <RouterLink :to="`/profile/${props.user.id}`">
+          <img
+            :src="props.user.avatar_url ? props.user.avatar_url : avatar"
+            class="rounded-full"
+            alt=""
+            srcset=""
+            style="height: 50px; width: 50px"
+          />
+        </RouterLink>
       </div>
       <div class="p-2 flex flex-col w-4/5">
         <div class="flex flex-row gap-1">
-          <span class="font-bold">{{ props.user.name }}</span>
-          <span>@{{ props.user.username }}</span>
+          <RouterLink :to="`/profile/${props.user.id}`" class="gap-1 flex">
+            <span class="font-bold">{{ props.user.name }}</span>
+            <span>@{{ props.user.username }}</span>
+          </RouterLink>
           <span>·</span>
           <span>{{ tempoPassado(props.created_at) }}</span>
         </div>
@@ -25,7 +29,11 @@
         <div class="flex flex-row gap-2 items-center mt-2">
           <MessageCircle class="w-4 h-4" />
           <span class="text-sm">0</span>
-          <Heart :class="liked ? 'w-4 h-4 text-red-500' : 'w-4 h-4'" @click="toggleLike" />
+          <Heart
+            :class="liked ? 'w-4 h-4 text-red-500' : 'w-4 h-4'"
+            class="hover:cursor-pointer"
+            @click="toggleLike"
+          />
           <span class="text-sm">{{ likesCount }}</span>
         </div>
       </div>

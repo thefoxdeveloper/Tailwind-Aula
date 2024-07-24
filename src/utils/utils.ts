@@ -18,3 +18,25 @@ export function tempoPassado(timestamp) {
     return `Há ${seconds} segundo${seconds > 1 ? 's' : ''}`
   }
 }
+
+export function geraMensagem(dataString) {
+  const data = new Date(dataString)
+  const meses = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro'
+  ]
+  const mes = meses[data.getUTCMonth()]
+  const ano = data.getUTCFullYear()
+
+  return `Entrou em ${mes} ${ano}`
+}
